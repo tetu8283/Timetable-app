@@ -32,8 +32,5 @@ RUN pecl install xdebug \
 # 作業ディレクトリを設定
 WORKDIR /var/www/work
 
-# Laravel プロジェクトの作成
-RUN composer create-project --prefer-dist laravel/laravel .
-
 # パーミッションの設定
 RUN chown -R www-data:www-data /var/www/work

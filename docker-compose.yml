@@ -19,7 +19,7 @@ services:
 
   # Nginxコンテナ
   web:
-    image: nginx:latest
+    image: nginx:1.21.6
     container_name: nginx
     restart: unless-stopped
     ports:
@@ -34,7 +34,7 @@ services:
 
   # PostgreSQLコンテナ
   db:
-    image: postgres:latest
+    image: postgres:13.4
     container_name: postgres
     restart: unless-stopped
     environment:
