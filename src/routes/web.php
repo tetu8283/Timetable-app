@@ -12,15 +12,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('/users', UserController::class)->except(['index', 'store', 'create', 'show']);
-Route::resource('/timetables', TimetableController::class)->except(['edit', 'update', 'destroy']);;
+Route::resource('/users', UserController::class)->except(['store', 'create', 'show']);
+Route::resource('/timetables', TimetableController::class);
 
 /*
 |--------------------------------------------------------------------------
 | Admin Routes
 |--------------------------------------------------------------------------
 */
-
 Route::group([ // 認証されていないとアクセスできない
     'prefix' => 'admin',
     'as' => 'admin.',

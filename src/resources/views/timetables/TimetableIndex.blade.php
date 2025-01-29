@@ -18,6 +18,7 @@
             @csrf
             <button type="submit">ログアウト</button>
         </form>
+        <a href="{{ route('users.index') }}">ユーザ一覧</a>
     @else
         <form action="{{ route('logout') }}" method="POST">
             @csrf
