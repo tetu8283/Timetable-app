@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ユーザ一覧</title>
+    <link rel="stylesheet" href="{{ asset('css/UserIndex.css') }}">
 </head>
 <body>
     <header>
@@ -12,6 +13,12 @@
         <p>ユーザ一覧画面</p>
     </header>
     <main>
+        @if(@session('success'))
+            <div class="flash-msg">
+                {{ session('success') }}
+            </div>
+        @endif
+
         <table border="1px">
             <thead>
                 <tr>
@@ -39,7 +46,7 @@
                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" onclick='deleteAlert()'>削除</button>
+                                    <button type="button" class="delete-button">削除</button>
                                 </form>
                             </td>
                         @endif
@@ -49,6 +56,15 @@
         </table>
     </main>
 
-    <script src="{{ asset('js/message.js') }}"></script>
+    {{-- <div id="deleteConfirmModal" class="custom-modal">
+        <div class="custom-modal-content">
+            <span class="custom-close-button">&times;</span>
+            <p>削除してもよろしいですか？</p>
+            <button id="confirmDeleteButton" class="btn btn-danger">削除</button>
+            <button id="cancelDeleteButton" class="btn btn-secondary">キャンセル</button>
+        </div>
+    </div> --}}
+
+    <script src="{{ asset('/js/modal.js') }}"></script>
 </body>
 </html>

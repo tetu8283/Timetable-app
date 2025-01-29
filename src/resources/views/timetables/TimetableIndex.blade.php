@@ -55,5 +55,14 @@
         </tbody>
     </table>
 
+    <div class="profile">
+        <p class="name">名前: {{ Auth::user()->name }}</p>
+        <p class="email">メール: {{ Auth::user()->email }}</p>
+        <p class="role">役割: {{ Auth::user()->role }}</p>
+
+        <p>
+            <a href="{{ route('users.edit', Auth::user()->id) }}">編集</a>
+        </p>
+    </div>
 </body>
 </html>
