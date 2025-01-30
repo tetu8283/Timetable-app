@@ -32,37 +32,31 @@
 
     <p>私は{{ Auth::user()->role }}です</p>
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th></th>
-                @foreach ($dates as $date)
-                    <th>{{ $date }}</th>
-                @endforeach
-            </tr>
-        </thead>
-        <tbody>
-            @for ($i = 1; $i <= 4; $i++)
-                <tr>
-                    <td>{{ $i }}コマ目</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            @endfor
-        </tbody>
-    </table>
 
     <div class="profile">
         <p class="name">名前: {{ Auth::user()->name }}</p>
         <p class="email">メール: {{ Auth::user()->email }}</p>
         <p class="role">役割: {{ Auth::user()->role }}</p>
-
         <p>
             <a href="{{ route('users.edit', Auth::user()->id) }}">編集</a>
         </p>
     </div>
+
+    <table border="1">
+        <tr>
+            <th></th>
+            @foreach ($dates as $index => $date)
+                <th>{{ $date->format('n/j') }}{{ $weeks[$index] }}</th>
+            @endforeach
+        </tr>
+        @for ($classes = 1; $classes <= 4; $classes++)
+            <tr>
+                <td>{{ $classes }}コマ </td>
+                @for ($days_of_the_week = 1; $days_of_the_week <= 5; $days_of_the_week++)
+                    <td></td>
+                @endfor
+            </tr>
+        @endfor
+    </table>
 </body>
 </html>

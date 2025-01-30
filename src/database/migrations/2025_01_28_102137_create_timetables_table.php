@@ -9,24 +9,30 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('timetables', function (Blueprint $table) {
             $table->id();
-            $table->string('subject_id');
-            $table->string('subject_name');
-            $table->string('location');
-            $table->string('tescher_name');
-            $table->text('notes')->nullable();
-            $table->timestamps();
-        });
-    }
+            // 学年: 1年/2年
+            $table->tinyInteger('grade');
+            // コース: 1/2/3 (将来的にマスターテーブルを持つなら course_id でもOK)
+            $table->tinyInteger('course');
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
-    {
-        Schema::dropIfExists('timetables');
+            // 過去や先の時間割も日別・月別で管理したいので「日付」を明示的に保持
+            $table->date('date');
+
+            // 何コマ目か
+            $table->tinyInteger('class_period');
+
+            // 科目ID
+            $table->foreignId('subject_id')
+                  ->constrained()
+                  ->onDelete('cascade');
+
+            $table->timestamps();
+
+            // 1日につき同じ学年・コース・コマが複数登録されないようユニークにしておくと便利
+            $table->unique(['grade', 'course', 'date', 'class_period'], 'unique_timetable');
+        });
     }
 };

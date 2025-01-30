@@ -46,7 +46,13 @@
                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="delete-button">削除</button>
+                                    {{-- <button type="submit" class="delete-button">削除</button> --}}
+                                    <button
+                                        type="submit"
+                                        class="delete-button"
+                                        onclick="return confirm('削除してよろしいですか？');">
+                                        削除
+                                    </button>
                                 </form>
                             </td>
                         @endif
@@ -56,15 +62,6 @@
         </table>
     </main>
 
-    {{-- <div id="deleteConfirmModal" class="custom-modal">
-        <div class="custom-modal-content">
-            <span class="custom-close-button">&times;</span>
-            <p>削除してもよろしいですか？</p>
-            <button id="confirmDeleteButton" class="btn btn-danger">削除</button>
-            <button id="cancelDeleteButton" class="btn btn-secondary">キャンセル</button>
-        </div>
-    </div> --}}
-
-    <script src="{{ asset('/js/modal.js') }}"></script>
+    {{-- <script src="{{ asset('/js/modal.js') }}"></script> --}}
 </body>
 </html>

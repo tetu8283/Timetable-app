@@ -10,10 +10,15 @@ class Timetable extends Model
     use HasFactory;
 
     protected $fillable = [
-        'subject_id',
-        'subject_name',
-        'location',
-        'tescher_name',
-        'notes',
+        'grade',
+        'course',
+        'date',
+        'class_period',
+        'subject_id'
     ];
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
+    }
 }
