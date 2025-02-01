@@ -60,4 +60,14 @@ class User extends Authenticatable
     {
         return $this->role === 'student';
     }
+
+    public function timetables()
+    {
+        return $this->belongsToMany(Timetable::class);
+    }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class);
+    }
 }

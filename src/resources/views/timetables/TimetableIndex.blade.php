@@ -28,6 +28,7 @@
 
     @if(Auth::user()->role === 'teacher' or Auth::user()->role === 'admin')
         <a href="{{ route('timetables.create') }}">時間割作成</a>
+        <a href="{{ route('subject.index') }}">科目作成</a>
     @endif
 
     <p>私は{{ Auth::user()->role }}です</p>

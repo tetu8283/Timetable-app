@@ -13,17 +13,22 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('subject_name', 100);
-            $table->string('subject_code', 50)->nullable();
+            $table->string('subject_code');
+            $table->string('subject_name');
+            $table->string('school_id');
+
+            $table->foreign('school_id')->references('school_id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
+        // 外部キー制約を削除
+        Schema::table('subjects', function (Blueprint $table) {
+            $table->dropForeign(['school_id']);
+        });
+
         Schema::dropIfExists('subjects');
     }
 };

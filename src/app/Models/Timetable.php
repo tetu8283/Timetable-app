@@ -17,8 +17,13 @@ class Timetable extends Model
         'subject_id'
     ];
 
-    public function subject()
+    public function users()
     {
-        return $this->belongsTo(Subject::class);
+        return $this->belongsToMany(User::class);
+    }
+
+    public function subjects()
+    {
+        return $this->belongsToMany(Subject::class);
     }
 }

@@ -3,9 +3,11 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TimetableController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\Auth\TeacherLoginController;
 use App\Http\Controllers\Auth\TeacherRegisterController;
 use App\Http\Controllers\Auth\AdminLoginController;
+use App\Models\Subject;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -14,6 +16,7 @@ Route::get('/', function () {
 
 Route::resource('/users', UserController::class)->except(['store', 'create', 'show']);
 Route::resource('/timetables', TimetableController::class);
+Route::resource('/subject', SubjectController::class);
 
 /*
 |--------------------------------------------------------------------------
