@@ -1,0 +1,22 @@
+/* 以下はカスタムプルダウン */
+.timetable {
+    border-collapse: collapse;
+}
+
+.timetable th,
+.timetable td {
+    border: 1px solid #ccc;
+    text-align: center;
+    padding: 5px;
+}
+
+.date-cell {
+    width: 200px;
+    height: 20px;
+    font-size: 0.8rem;
+}
+
+.subject-cell {
+    width: 200px;
+    height: 40px;
+}

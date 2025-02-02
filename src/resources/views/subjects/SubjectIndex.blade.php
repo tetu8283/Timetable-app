@@ -19,6 +19,8 @@
             <input type="text" id="subject_name" name="subject_name" required>
             <label for="school_id">担当者番号:</label>
             <input type="text" id="school_id" name="school_id" required>
+            <label for="color">背景色:</label>
+            <input type="color" id="color" name="color" value="#ffffff">
 
             <button type="submit">作成</button>
         </form>
@@ -42,12 +44,14 @@
             <th>科目番号</th>
             <th>科目名</th>
             <th>学籍番号</th>
+            <th>背景色</th>
         </tr>
         @foreach ($subjects as $subject)
             <tr>
                 <td>{{ $subject->subject_code}}</td>
                 <td>{{ $subject->subject_name }}</td>
                 <td>{{ $subject->school_id }}</td>
+                <td style="background-color: {{ $subject->color }};"></td>
                 @if(Auth::user()->role === 'admin')
                     <td>
                         <a href="{{ route('subject.edit', $subject->id) }}">編集</a>

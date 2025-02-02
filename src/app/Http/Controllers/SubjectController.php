@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\Timetable;
 use App\Models\User;
+use Carbon\Carbon;
 
 class SubjectController extends Controller
 {
@@ -32,12 +33,14 @@ class SubjectController extends Controller
             'subject_code' => 'required|unique:subjects,subject_code',
             'subject_name' => 'required|string|max:255',
             'school_id' => 'required|string',
+            'color' => 'required|string',
         ]);
 
         $subject = new Subject();
         $subject->subject_code = $request->subject_code;
         $subject->subject_name = $request->subject_name;
         $subject->school_id = $request->school_id;
+        $subject->color = $request->color;
 
         $subject->save();
 
@@ -66,6 +69,7 @@ class SubjectController extends Controller
         $subject = Subject::find($subject->id);
         $subject->subject_name = $request->subject_name;
         $subject->school_id = $request->school_id;
+        $subject->color = $request->color;
 
         $subject->save();
 

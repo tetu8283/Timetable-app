@@ -3,20 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>時間割作成</title>
+    <!-- 独自の CSS ファイル -->
+    <link href="{{ asset('css/timetable.css') }}" rel="stylesheet">
+    <!-- Select2 用 CSS (CDN) -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
     <a href="{{ route('timetables.index') }}">時間割一覧</a>
-    @if(Auth::user()->role === 'teacher' or Auth::user()->role === 'admin')
-        <a href="{{ route('subject.index') }}">科目作成</a>
-    @endif
+    <a href="{{ route('subject.index') }}">科目作成</a>
 
+    <!-- 年・月選択フォーム -->
+    <form action="{{ route('timetables.create') }}" method="GET">
+        <label for="year">年:</label>
+        <select name="year" id="year">
+            @foreach ($years as $year)
+                <option value="{{ $year }}" {{ $year == $selectedYear ? 'selected' : '' }}>
+                    {{ $year }}
+                </option>
+            @endforeach
+        </select>
 
-    <table border="1" style="border-collapse: collapse;">
+        <label for="month">月:</label>
+        <select name="month" id="month">
+            @foreach ($months as $month)
+                <option value="{{ $month }}" {{ $month == $selectedMonth ? 'selected' : '' }}>
+                    {{ $month }}
+                </option>
+            @endforeach
+        </select>
+
+        <label for="course">コース:</label>
+        <select name="course" id="course">
+            <option value="1" {{ $selectedCourse == 1 ? 'selected' : '' }}>情報システム</option>
+            <option value="2" {{ $selectedCourse == 2 ? 'selected' : '' }}>生産管理</option>
+            <option value="3" {{ $selectedCourse == 3 ? 'selected' : '' }}>情報セキュリティ</option>
+        </select>
+
+        <button type="submit">表示</button>
+    </form>
+
+    <br>
+
+    <!-- 時間割表 -->
+    <table class="timetable">
         <thead>
             <tr>
-                <!-- 左上のセルは空（または「時間割」等のタイトル） -->
+                <!-- 左上セル：タイトル -->
                 <th>時間割</th>
                 @foreach ($weekDays as $dayName)
                     <th>{{ $dayName }}</th>
@@ -24,36 +57,49 @@
             </tr>
         </thead>
         <tbody>
-            <!-- 各週ごとに、1日を4コマに分割して表示 -->
             @foreach ($calendar as $week)
-                <!-- 日付を表示する行 -->
+                <!-- 日付行 -->
                 <tr>
                     <td></td>
                     @foreach ($week as $date)
-                    <td style="width:140px; height:25px; vertical-align:top; text-align:center;">
-                        @if ($date)
-                        <div>{{ $date->format('n/j') }}</div>
-                        @endif
-                    </td>
-                    @endforeach
-                </tr>
-                @for ($period = 1; $period <= $periods; $period++)
-                    <tr>
-                    <!-- 行の最初のセルに何コマ目かを表示 -->
-                    <td>{{ $period }}コマ</td>
-                    <!-- 各曜日ごとのセル -->
-                    @foreach ($week as $date)
-                        <td style="width:140px; height:40px; vertical-align:top; text-align:center;">
-                        <!-- ここに各コマの授業内容やフォームなどを配置できます -->
+                        <td class="date-cell">
+                            @if ($date)
+                                <div>{{ $date->format('n/j') }}</div>
+                            @endif
                         </td>
                     @endforeach
+                </tr>
+                <!-- 各コマの行 -->
+                @for ($period = 1; $period <= $periods; $period++)
+                    <tr>
+                        <!-- コマ番号 -->
+                        <td class="period">{{ $period }}コマ</td>
+                        @foreach ($week as $date)
+                            <td class="subject-cell">
+                                <!-- 科目選択フォーム（Select2 を使用） -->
+                                <select name="subject" class="subject-select" style="width: 100%;">
+                                    <option value="" data-color="" style="background-color: transparent;">未選択</option>
+                                    @foreach ($subjects as $subject)
+                                        <option value="{{ $subject->id }}"
+                                                data-color="{{ $subject->color }}"
+                                                style="background-color: {{ $subject->color }};">
+                                            {{ $subject->subject_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+                        @endforeach
                     </tr>
                 @endfor
             @endforeach
         </tbody>
     </table>
 
-
+    <!-- jQuery (Select2 の依存ライブラリ) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Select2 の JS (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <!-- 独自の JavaScript ファイル -->
+    <script src="{{ asset('js/timetable.js') }}"></script>
 </body>
 </html>
-

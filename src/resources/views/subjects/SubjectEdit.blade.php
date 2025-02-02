@@ -18,6 +18,8 @@
             <input type="text" id="subject_name" name="subject_name" value="{{ $subject->subject_name }}" required>
             <label for="school_id">担当者番号:</label>
             <input type="text" id="school_id" name="school_id" value="{{ $subject->school_id }}" required>
+            <label for="color">背景色:</label>
+            <input type="color" id="color" name="color" value="{{ $subject->color }}">
 
             <button type="submit">更新</button>
         </form>
