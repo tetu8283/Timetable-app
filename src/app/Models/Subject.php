@@ -10,15 +10,23 @@ class Subject extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['subject_code', 'subject_name', 'school_id', 'color'];
+    protected $fillable = [
+                            'subject_id',
+                            'subject_name',
+                            'school_id',
+                            'location',
+                            'color'
+                        ];
 
-    public function users()
+    public function user()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsTo(User::class, 'school_id', 'school_id');
     }
 
+    // ◆1Subject : 多Timetable
+    //   timetablesテーブルの 'subject_id' が subjectsテーブルの 'id' を参照
     public function timetables()
     {
-        return $this->belongsToMany(Timetable::class);
+        return $this->hasMany(Timetable::class, 'subject_id');
     }
 }

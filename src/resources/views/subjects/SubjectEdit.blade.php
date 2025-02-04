@@ -8,9 +8,9 @@
 </head>
 <body>
     <a href="{{ route('timetables.index') }}">時間割一覧</a>
-    <a href="{{ route('timetables.create') }}">時間割作成</a>
+    <a href="{{ route('staff.timetables.create') }}">時間割作成</a>
     <div class="edit-subject">
-        <form action="{{ route('subject.update', $subject->id) }}" method="POST">
+        <form action="{{ route('staff.subjects.update', $subject->id) }}" method="POST">
             @csrf
             @method('PUT')
 
@@ -18,6 +18,8 @@
             <input type="text" id="subject_name" name="subject_name" value="{{ $subject->subject_name }}" required>
             <label for="school_id">担当者番号:</label>
             <input type="text" id="school_id" name="school_id" value="{{ $subject->school_id }}" required>
+            <label for="location">場所:</label>
+            <input type="text" id="location" name="location" value="{{ $subject->location }}" required>
             <label for="color">背景色:</label>
             <input type="color" id="color" name="color" value="{{ $subject->color }}">
 
@@ -34,7 +36,6 @@
                 </ul>
             </div>
         @endif
-
     </div>
 </body>
 </html>

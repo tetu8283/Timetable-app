@@ -11,19 +11,16 @@ class Timetable extends Model
 
     protected $fillable = [
         'grade',
-        'course',
+        'course_id',
         'date',
         'class_period',
         'subject_id'
     ];
 
-    public function users()
+    // ◆多Timetable : 1Subject
+    //   timetablesテーブルの 'subject_id' が subjectsテーブルの 'id' を参照
+    public function subject()
     {
-        return $this->belongsToMany(User::class);
-    }
-
-    public function subjects()
-    {
-        return $this->belongsToMany(Subject::class);
+        return $this->belongsTo(Subject::class, 'subject_id');
     }
 }

@@ -46,7 +46,6 @@
                                 <form action="{{ route('users.destroy', $user->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    {{-- <button type="submit" class="delete-button">削除</button> --}}
                                     <button
                                         type="submit"
                                         class="delete-button"
@@ -61,7 +60,5 @@
             </tbody>
         </table>
     </main>
-
-    {{-- <script src="{{ asset('/js/modal.js') }}"></script> --}}
 </body>
 </html>

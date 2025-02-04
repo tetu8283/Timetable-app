@@ -16,7 +16,7 @@ class SubjectController extends Controller
      */
     public function index()
     {
-        $subjects = Subject::orderBy('subject_code', 'asc')->get();
+        $subjects = Subject::orderBy('subject_id', 'asc')->get();
 
         return view('subjects.SubjectIndex', compact('subjects'));
     }
@@ -30,21 +30,23 @@ class SubjectController extends Controller
     {
         // バリデーションを追加
         $request->validate([
-            'subject_code' => 'required|unique:subjects,subject_code',
+            'subject_id' => 'required|unique:subjects,subject_id',
             'subject_name' => 'required|string|max:255',
             'school_id' => 'required|string',
+            'location' => 'string|max:255',
             'color' => 'required|string',
         ]);
 
         $subject = new Subject();
-        $subject->subject_code = $request->subject_code;
+        $subject->subject_id = $request->subject_id;
         $subject->subject_name = $request->subject_name;
         $subject->school_id = $request->school_id;
+        $subject->location = $request->location;
         $subject->color = $request->color;
 
         $subject->save();
 
-        return redirect()->route('subject.index')->with('success', '科目が作成されました。');
+        return redirect()->route('staff.subjects.index')->with('success', '科目が作成されました。');
     }
 
     /**
@@ -69,11 +71,12 @@ class SubjectController extends Controller
         $subject = Subject::find($subject->id);
         $subject->subject_name = $request->subject_name;
         $subject->school_id = $request->school_id;
+        $subject->location= $request->location;
         $subject->color = $request->color;
 
         $subject->save();
 
-        return redirect()->route('subject.index');
+        return redirect()->route('staff.subjects.index');
     }
 
     /**
@@ -87,6 +90,6 @@ class SubjectController extends Controller
 
         $subject->delete();
 
-        return redirect()->route('subject.index');
+        return redirect()->route('staff.subjects.index');
     }
 }

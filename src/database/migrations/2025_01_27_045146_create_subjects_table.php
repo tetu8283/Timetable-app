@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
-            $table->string('subject_code');
+            $table->string('subject_id')->unique();
             $table->string('subject_name');
             $table->string('school_id');
+            $table->string('color')->default('#ffffff');
+            $table->string('location')->nullable();
 
             $table->foreign('school_id')->references('school_id')->on('users')->onDelete('cascade');
             $table->timestamps();

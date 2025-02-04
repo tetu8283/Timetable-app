@@ -41,8 +41,6 @@ services:
       POSTGRES_USER: laravel               # データベースユーザー名
       POSTGRES_PASSWORD: secret            # データベースパスワード
       POSTGRES_DB: laravel                  # デフォルトデータベース名
-    volumes:
-      - dbdata:/var/lib/postgresql/data    # データ永続化用ボリューム
     ports:
       - "5432:5432"                        # PostgreSQLのポートを公開
     networks:
