@@ -60,8 +60,11 @@ Route::group([
     'as' => 'staff.',
     'middleware' => ['auth', 'role:admin,teacher']
 ], function () {
-    Route::resource('timetables', TimetableController::class)->except(['index','show', 'edit', 'update', 'destroy']);
+    Route::resource('timetables', TimetableController::class)->except(['index', 'show', 'edit', 'update', 'destroy']);
     Route::resource('subjects', SubjectController::class)->except(['show']);
+
+    // 担当科目のみを表示する
+    Route::get('show/{id}', [TimetableController::class, 'show'])->name('show');
 
     // 月単位の編集/更新 など カスタムルートを定義
     // （リソースルートの edit($id) ではなく、月単位の一括更新を想定）

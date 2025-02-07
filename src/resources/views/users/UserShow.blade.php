@@ -2,15 +2,17 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>登録済み時間割一覧</title>
-    <link rel="stylesheet" href="{{ asset('css/timetable.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>担当科目一覧</title>
+    <link href="{{ asset('css/timetable.css') }}" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="header-logo">
-            <h1>時間割一覧</h1>
+            <h1>担当科目表示</h1>
         </div>
         <ul class="header-nav">
+            <li><a href="{{ route('timetables.index') }}">時間割一覧</a></li>
             @if(Auth::user()->role == 'admin')
                 <li><a href="{{ route('users.index') }}">ユーザ一覧</a></li>
                 <li><a href="{{ route('staff.timetables.create') }}">時間割作成</a></li>
@@ -24,7 +26,6 @@
                         時間割編集
                     </a>
                 </li>
-                <li><a href="{{ route('staff.show' , Auth::user()->id) }}">担当科目確認</a></li>
                 <li><a href="{{ route('staff.subjects.index') }}">科目作成</a></li>
                 <li>
                     <form action="{{ route('admin.logout') }}" method="POST">
@@ -63,10 +64,9 @@
         </ul>
     </header>
 
-
     @if(Auth::check())
         <p>ログイン中: {{ Auth::user()->name }} ({{ Auth::user()->role }})</p>
-        <p>Email: {{ Auth::user() ->email }}</p>
+        <p>Email: {{ Auth::user()->email }}</p>
     @endif
 
     <!-- プルダウンフォーム (年・月・コース・学年) -->
@@ -109,12 +109,9 @@
     </form>
 
     <!-- 時間割テーブル -->
-    <!-- ここから時間割表示 (レコードがある場合だけ) -->
     @if($timetableRecords->isEmpty())
-        <!-- ★時間割が1件もない時のメッセージ -->
         <p>時間割が存在しません</p>
     @else
-        <!-- ★時間割がある場合は、従来通りテーブル表示 -->
         <table border="1" cellpadding="5" cellspacing="0">
             <thead>
                 <tr>
@@ -178,11 +175,11 @@
                                     <td></td>
                                 @endif
                             @endforeach
-                            </tr>
-                        @endfor
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </body>
+                        </tr>
+                    @endfor
+                @endforeach
+            </tbody>
+        </table>
+    @endif
+</body>
 </html>

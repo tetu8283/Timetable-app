@@ -10,10 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 </head>
 <body>
-    <a href="{{ route('timetables.index') }}">時間割一覧</a> |
+    <a href="{{ route('timetables.index') }}">時間割一覧</a>
     <a href="{{ route('staff.subjects.index') }}">科目作成</a>
 
-    <!-- 1) 表示切り替え用フォーム (GET) -->
     <form action="{{ route('staff.timetables.create') }}" method="GET">
         <label for="year">年:</label>
         <select name="year" id="year">

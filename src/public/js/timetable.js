@@ -1,4 +1,3 @@
-// timetable.js
 $(document).ready(function() {
     // Select2 のオプションの表示に背景色を適用するテンプレート関数
     function formatState(state) {
@@ -25,4 +24,5 @@ $(document).ready(function() {
         var color = selectedOption.data('color');
         $(this).closest('td').css('background-color', color ? color : '');
     });
+
 });
