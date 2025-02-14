@@ -1,17 +1,15 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>時間割作成</title>
+@extends('layouts.app')
+
+@section('title', '時間割作成')
+
+@push('styles')
     <!-- 独自の CSS ファイル -->
     <link href="{{ asset('css/timetable.css') }}" rel="stylesheet">
     <!-- Select2 用 CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-</head>
-<body>
-    <a href="{{ route('timetables.index') }}">時間割一覧</a>
-    <a href="{{ route('staff.subjects.index') }}">科目作成</a>
+@endpush
+
+@section('content')
 
     <form action="{{ route('staff.timetables.create') }}" method="GET">
         <label for="year">年:</label>
@@ -119,12 +117,31 @@
             </tbody>
         </table>
     </form>
+@endsection
 
-    <!-- jQuery (Select2 の依存ライブラリ) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Select2 の JS (CDN) -->
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <!-- 独自の JavaScript ファイル -->
-    <script src="{{ asset('js/timetable.js') }}"></script>
-</body>
-</html>
+@push('scripts')
+        <!-- jQuery (Select2 の依存ライブラリ) -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Select2 の JS (CDN) -->
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <!-- 独自の JavaScript ファイル -->
+        <script src="{{ asset('js/timetable.js') }}"></script>
+
+        {{-- プルダウンの値が変更されたときに、登録用hiddenフィールドに反映する --}}
+        <script>
+            $(document).ready(function(){
+                $('#year, #month, #grade, #course').on('change', function(){
+                    var selectedYear   = $('#year').val();
+                    var selectedMonth  = $('#month').val();
+                    var selectedGrade  = $('#grade').val();
+                    var selectedCourse = $('#course').val();
+
+                    // 登録用フォーム内のhiddenフィールドを更新
+                    $('#storeForm input[name="year"]').val(selectedYear);
+                    $('#storeForm input[name="month"]').val(selectedMonth);
+                    $('#storeForm input[name="grade"]').val(selectedGrade);
+                    $('#storeForm input[name="course"]').val(selectedCourse);
+                });
+            });
+        </script>
+@endpush

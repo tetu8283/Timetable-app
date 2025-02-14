@@ -81,11 +81,18 @@ class TimetableService
      * @param int|string $course
      * @param array      $subjects subjects[YYYY-MM-DD][コマ] => subject_id
      */
-    public function bulkInsertTimetables($grade, $course, array $subjects)
+    public function bulkInsertTimetables($year, $month, $grade, $course, array $subjects)
     {
         $insertData = [];
 
+        // ここで3月を選択しても2月に変わってしまう
         foreach ($subjects as $date => $periodArray) {
+
+            // ユーザーが選択した年・月に上書きし、日付部分のみをそのまま利用する
+            $originalDate = Carbon::createFromFormat('Y-m-d', $date);
+            // 選択された年・月に変更
+            $correctedDate = Carbon::create($year, $month, $originalDate->day);
+
             foreach ($periodArray as $period => $subjectId) {
                 if (empty($subjectId)) {
                     continue;
@@ -94,7 +101,7 @@ class TimetableService
                     'grade'        => $grade,
                     'course_id'    => $course,
                     'class_period' => $period,
-                    'date'         => $date,
+                    'date'         => $correctedDate->format('Y-m-d'), // 修正後の正しい日付をセット
                     'subject_id'   => $subjectId,
                     'created_at'   => now(),
                     'updated_at'   => now()

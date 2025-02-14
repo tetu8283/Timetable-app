@@ -17,8 +17,9 @@ class SubjectController extends Controller
     public function index()
     {
         $subjects = Subject::orderBy('subject_id', 'asc')->get();
+        $headerTitle = '科目作成';
 
-        return view('subjects.SubjectIndex', compact('subjects'));
+        return view('subjects.SubjectIndex', compact('subjects', 'headerTitle'));
     }
 
     /**
@@ -57,7 +58,8 @@ class SubjectController extends Controller
     public function edit(Subject $subject)
     {
         $subject = Subject::find($subject->id);
-        return view('subjects.SubjectEdit', compact('subject'));
+        $headerTitle = '科目更新';
+        return view('subjects.SubjectEdit', compact('subject', 'headerTitle'));
     }
 
     /**

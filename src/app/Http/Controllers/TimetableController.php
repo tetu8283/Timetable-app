@@ -13,11 +13,21 @@ class TimetableController extends Controller
 {
     protected $timetableService;
 
+    /**
+     * コンストラクタ
+     *
+     * @param \App\Services\TimetableService $timetableService
+     */
     public function __construct(TimetableService $timetableService)
     {
         $this->timetableService = $timetableService;
     }
 
+    /**
+     * Summary of index
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function index(Request $request)
     {
         $now            = Carbon::now();
@@ -25,6 +35,7 @@ class TimetableController extends Controller
         $selectedMonth  = $request->input('month', $now->month);
         $selectedGrade  = $request->input('grade', 1);
         $selectedCourse = $request->input('course', 1);
+        $viewMode       = $request->input('view', 'month'); // 表示モード：'week' or 'month'
 
         // プルダウン用の値
         $minYear = $now->year - 2;
@@ -35,24 +46,52 @@ class TimetableController extends Controller
         $weekDays = ['月','火','水','木','金'];
         $periods  = 4; // 1日あたりのコマ数
 
-        // カレンダー作成（カレンダーの初日・最終日も取得）
-        $calendarData = $this->timetableService->getCalendar($selectedYear, $selectedMonth);
-        $calendar     = $calendarData['calendar'];
-        $firstDay     = $calendarData['firstDay'];
-        $lastDay      = $calendarData['lastDay'];
+        // カレンダー作成（表示モードによって週別表示か月別表示かを切り替え）
+        if ($viewMode === 'week') {
+            // 週別表示の場合
+            // 修正: 現在の月の場合は現在の日付を基準に、それ以外の場合は選択月の中間日（15日）を基準にする
+            if ($selectedYear == $now->year && $selectedMonth == $now->month) {
+                $selectedDate = $now;
+            } else {
+                $selectedDate = Carbon::create($selectedYear, $selectedMonth, 15);
+            }
+            $startOfWeek = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
+            $week = [];
+            for ($i = 0; $i < 5; $i++) {
+                $week[] = $startOfWeek->copy()->addDays($i);
+            }
+            $calendar = [$week]; // 週別表示なので1週間のみの配列にする
+            $firstDay = $week[0];
+            $lastDay  = $week[4];
+        } else {
+            // 月別表示
+            $calendarData = $this->timetableService->getCalendar($selectedYear, $selectedMonth);
+            $calendar     = $calendarData['calendar'];
+            $firstDay     = $calendarData['firstDay'];
+            $lastDay      = $calendarData['lastDay'];
+        }
 
-        // 今月分のTimetableを一括取得 & 連想配列化
+        // 指定期間のTimetableを一括取得＆連想配列化
         $timetableData = $this->timetableService->getTimetableMap($selectedGrade, $selectedCourse, $firstDay, $lastDay);
-        extract($timetableData); // $timetableRecords, $timetableMap, $firstTimetableId
+        extract($timetableData); // $timetableRecords, $timetableMap, $firstTimetableId などが利用可能
+
+        $headerTitle = '時間割一覧'; // ヘッダータイトル（時間割一覧ページ）
 
         return view('timetables.TimetableIndex', compact(
-            'years', 'months', 'grades',
+            'headerTitle', 'years', 'months', 'grades',
             'selectedYear', 'selectedMonth', 'selectedGrade', 'selectedCourse',
             'weekDays', 'calendar', 'periods', 'timetableMap', 'timetableRecords',
-            'firstTimetableId'
+            'firstTimetableId', 'viewMode'
         ));
     }
 
+
+    /**
+     * 時間割作成ページ
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function create(Request $request)
     {
         $now            = Carbon::now();
@@ -78,7 +117,10 @@ class TimetableController extends Controller
         $timetables   = Timetable::all();
         $subjects     = Subject::all();
 
+        $headerTitle = '時間割作成'; // ヘッダータイトル（時間割作成ページ）
+
         return view('timetables.TimetableCreate', compact(
+            'headerTitle',
             'timetables',
             'calendar',
             'weekDays',
@@ -94,6 +136,11 @@ class TimetableController extends Controller
         ));
     }
 
+    /**
+     * Summary of store
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function store(Request $request)
     {
         $grade  = $request->input('grade');
@@ -101,11 +148,27 @@ class TimetableController extends Controller
         // subjects[YYYY-MM-DD][コマ] => 科目ID の配列
         $subjects = $request->input('subjects', []);
 
-        $this->timetableService->bulkInsertTimetables($grade, $course, $subjects);
+        // 選択された年と月を取得（隠しフィールドから送信されている）
+        $selectedYear  = $request->input('year');
+        $selectedMonth = $request->input('month');
 
-        return redirect()->route('timetables.index')->with('success', '時間割を登録しました');
+        $this->timetableService->bulkInsertTimetables($selectedYear, $selectedMonth, $grade, $course, $subjects);
+
+        // リダイレクト時に選択された年月・学年・コースをクエリパラメータとして渡す
+        return redirect()->route('timetables.index', [
+            'year'   => $selectedYear,
+            'month'  => $selectedMonth,
+            'grade'  => $grade,
+            'course' => $course,
+        ])->with('success', '時間割を登録しました');
     }
 
+    /**
+     * 時間割更新ページ
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function edit(Request $request)
     {
         $emptySubjectId = 999; // ビュー側で使用
@@ -133,12 +196,15 @@ class TimetableController extends Controller
 
         // 今月分のTimetableを一括取得 & 連想配列化
         $timetableData = $this->timetableService->getTimetableMap($selectedGrade, $selectedCourse, $firstDay, $lastDay);
-        extract($timetableData); // $timetableRecords, $timetableMap, 等
+        extract($timetableData); // $timetableRecords, $timetableMap など
 
         // 全科目（選択肢用）
         $subjects = Subject::all();
 
+        $headerTitle = '時間割更新'; // ヘッダータイトル（時間割更新ページ）
+
         return view('timetables.TimetableEdit', compact(
+            'headerTitle',
             'years', 'months', 'grades',
             'selectedYear', 'selectedMonth', 'selectedGrade', 'selectedCourse',
             'weekDays', 'calendar', 'periods',
@@ -153,11 +219,27 @@ class TimetableController extends Controller
         // subjects[YYYY-MM-DD][コマ] => 科目ID の配列
         $subjects = $request->input('subjects', []);
 
+        // 追加：選択された年と月を取得（隠しフィールドから送信されている）
+        $selectedYear  = $request->input('year');
+        $selectedMonth = $request->input('month');
+
         $this->timetableService->updateTimetables($grade, $course, $subjects);
 
-        return redirect()->route('timetables.index')->with('success', '時間割を更新しました');
+        // 修正：リダイレクト時に選択された年月・学年・コースをクエリパラメータとして渡す
+        return redirect()->route('timetables.index', [
+            'year'   => $selectedYear,
+            'month'  => $selectedMonth,
+            'grade'  => $grade,
+            'course' => $course,
+        ])->with('success', '時間割を更新しました');
     }
 
+    /**
+     * ユーザ詳細ページ
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function show(Request $request)
     {
         // ログインユーザー情報取得
@@ -187,7 +269,7 @@ class TimetableController extends Controller
 
         // 今月分の Timetable を一括取得し、連想配列に変換
         $timetableData = $this->timetableService->getTimetableMap($selectedGrade, $selectedCourse, $firstDay, $lastDay);
-        extract($timetableData); // ここで $timetableRecords, $timetableMap, $firstTimetableId が利用可能
+        extract($timetableData); // $timetableRecords, $timetableMap, $firstTimetableId が利用可能
 
         // フォールバック用の Subject を取得（存在しなければ作成）
         $fallbackSubject = Subject::updateOrCreate(
@@ -207,11 +289,13 @@ class TimetableController extends Controller
             }
         }
 
+        $headerTitle = '担当科目確認';
+
         return view('users.UserShow', compact(
             'years', 'months', 'grades',
             'selectedYear', 'selectedMonth', 'selectedGrade', 'selectedCourse',
             'weekDays', 'calendar', 'periods', 'timetableMap', 'timetableRecords',
-            'firstTimetableId', 'school_id', 'fallbackSubject'
+            'firstTimetableId', 'school_id', 'fallbackSubject', 'headerTitle'
         ));
     }
 

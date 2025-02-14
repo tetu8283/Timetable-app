@@ -1,0 +1,62 @@
+
+/* 画面全体にFlexboxを適用して中央寄せ */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.logo {
+    margin-top: 3em;
+}
+
+/* ログインコンテナのスタイル */
+.login-container {
+    width: 40em;
+    height: 30em;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    text-align: center;
+}
+
+.login-form {
+    text-align: center;
+    border-radius: 8px;
+    height: 25em;
+}
+
+.input-school-id {
+    margin-top: 5em;
+    margin-bottom: 3em;
+}
+
+.input-password {
+    margin-bottom: 1em;
+}
+
+.input-school-id, .input-password {
+    width: 30%;
+    height: 3em;
+    padding: 0 1em;
+    border: 1px solid #ccc;
+}
+
+.input-remember-me {
+    cursor: pointer;
+}
+
+.login-button {
+    margin-top: 2em;
+    width: 10em;
+    height: 2.5em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+}
+
+.login-button:hover {
+    background-color: #ccc;
+}

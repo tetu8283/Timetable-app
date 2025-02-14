@@ -1,14 +1,12 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>科目一覧</title>
-</head>
-<body>
-    <a href="{{ route('timetables.index') }}">時間割一覧</a>
-    <a href="{{ route('staff.timetables.create') }}">時間割作成</a>
+@extends('layouts.app')
+
+@section('title', '科目作成')
+
+@push('styles')
+    <!-- 独自の CSS ファイル -->
+@endpush
+
+@section('content')
     <div class="create-subject">
         <form action="{{ route('staff.subjects.store') }}" method="POST">
             @csrf
@@ -72,5 +70,8 @@
             @endforeach
         </table>
     </div>
-</body>
-</html>
+@endsection
+
+@push('scripts')
+
+@endpush

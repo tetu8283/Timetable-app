@@ -16,7 +16,9 @@ class UserController extends Controller
     {
         // userをadmin, teacher, studentの順に並び替える
         $users = User::orderByRaw("CASE role WHEN 'admin' THEN 1 WHEN 'teacher' THEN 2 WHEN 'student' THEN 3 ELSE 4 END")->get();
-        return view('users.UserIndex', compact('users'));
+        $headerTitle = 'ユーザ一覧';
+
+        return view('users.UserIndex', compact('users', 'headerTitle'));
     }
 
     /**
@@ -27,7 +29,9 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user = User::findOrFail($user->id);
-        return view('users.UserEdit', compact('user'));
+        $headerTitle = 'プロフィール更新';
+
+        return view('users.UserEdit', compact('user', 'headerTitle'));
     }
 
     /**

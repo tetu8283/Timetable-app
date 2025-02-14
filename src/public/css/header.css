@@ -1,0 +1,102 @@
+header {
+    height: 7em;
+    width: 100%;
+}
+
+.header-nav {
+    width: 12em;
+}
+
+/* サイドバー（ナビゲーション）の基本スタイル */
+#js-nav {
+    position: fixed;           /* 画面に固定 */
+    top: 0;
+    right: 0;
+    width: 13em;              /* サイドバーの幅 */
+    height: 100%;              /* 画面全体の高さ */
+    background-color: #fff;    /* 背景色（必要に応じて変更） */
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    transform: translateX(100%);  /* 初期状態では画面外（右側）に配置 */
+    transition: transform 0.3s ease-in-out;  /* スムーズなスライドアニメーション */
+    z-index: 1000;             /* 他の要素より前面に表示 */
+    padding: 1rem;
+}
+
+  /* サイドバーが「open」クラスを持つとき、画面内に表示 */
+#js-nav.open {
+    transform: translateX(0);
+}
+
+/* ナビゲーションリストの基本スタイル */
+.nav-items {
+    list-style: none;
+    position: relative;
+    top: 12em;
+    margin: 0 auto;
+}
+
+/* 各ナビゲーション項目のマージン */
+.nav-item {
+    margin-bottom: 1.3em;
+}
+
+/* ホバーエフェクト */
+.nav-item a {
+    position: relative;
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+    font-size: 1.2em;
+    padding: 0.2em 0.3em;
+}
+
+.nav-item a::before {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 50%;
+    background-color: #333;
+    transition: width 0.3s ease, left 0.3s ease;
+}
+
+.nav-item a:hover::before {
+    width: 100%;
+    left: 0;
+}
+/* ここまで */
+
+.logout-button {
+    color: #ffffff;
+    background-color: red;
+    border-radius: 4px;
+    border: none;
+    font-size: 1.2em;
+    padding: 0.3em 0.5em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-button:hover {
+    background-color: blue;
+}
+
+/* -------------------------------------
+トグルボタンのスタイル
+---------------------------------------- */
+#js-toggle-sidebar {
+    font-size: 3em;
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    z-index: 1100; /* サイドバーより上に表示 */
+    border-radius: 4px;
+    transition: transform 0.4s ease-in-out;
+}
+
+#js-toggle-sidebar.open {
+    transform: rotate(90deg); /* 90度回転 */
+}
