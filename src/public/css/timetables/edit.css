@@ -1,82 +1,68 @@
-/* 全体の基本フォントや余白の設定 */
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-}
-
-/* プルダウンフォームと更新ボタンを横並びに配置 */
-.form-row {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;       /* 各要素間の余白 */
-    margin: 20px auto;
-}
-
-/* プルダウンメニューのフォームを中央に配置 */
-.form-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto;
-}
-
-/* テーブルを中央に配置するためのコンテナ */
-.timetable-container {
-    display: flex;
-    justify-content: center;
-    margin: 20px auto;
-}
-
-/* シンプルなテーブルデザイン */
-.timetable {
-    border-collapse: collapse;
-    width: 90%; /* 必要に応じて調整 */
-}
-
-/* テーブルヘッダーのスタイル（曜日部分） */
-.timetable th {
-    background-color: #f5f5f5;
-    padding: 10px;
-    border: 1px solid #ddd;
+.edit-container {
     text-align: center;
 }
 
-/* テーブルセルの基本スタイル */
-.timetable td {
-    padding: 10px;
-    border: 1px solid #ddd;
+/* プルダウンフォーム部分の設定 */
+.pulldown-container form {
+    display: inline-block;
     text-align: center;
+    margin-bottom: 15px;
 }
 
-/* 日付セル内のテキストの中央寄せ */
-.date-cell div {
-    text-align: center;
-}
-
-/* コマ番号セルのスタイル */
-.period {
-    font-weight: bold;
-    text-align: center;
-}
-
-/* セレクトボックスのスタイル */
-select {
-    height: 2em;
-    width: 8em;
-    text-align: center;
-}
-
-/* ボタンのスタイル */
 button {
+    margin-left: 1em ;
+    margin-top: 2em;
     width: 7em;
     height: 2em;
     cursor: pointer;
+    border: none;
+    border-radius: 3px;
     border: 0.5px solid #ccc;
-    margin-left: 1em;
 }
 
-/* ボタンにマウスオーバーした際の背景色変更 */
 button:hover {
     background-color: #ccc;
+}
+
+.pulldown-container form label,
+.pulldown-container form select,
+.pulldown-container form button {
+    padding: 5px;
+    font-size: 1rem;
+}
+
+/* プルダウンコンテナ内の「時間割更新」ボタンも中央寄せ */
+.pulldown-container > button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+}
+
+/* テーブル全体を中央に配置 */
+table.timetable {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: auto;
+}
+
+/* テーブルのセルを中央寄せ＆シンプルなボーダー */
+table.timetable th,
+table.timetable td {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 10em;
+}
+
+/* ヘッダーの背景色 */
+table.timetable th {
+    background-color: #f2f2f2;
+}
+
+/* セル内の select 要素を幅100% で表示 */
+table.timetable select {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    background-color: transparent;
 }
