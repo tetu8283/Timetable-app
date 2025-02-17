@@ -1,0 +1,55 @@
+index-container {
+    text-align: center;
+    margin: 20px;
+}
+
+.pulldown-container {
+    text-align: center;
+}
+
+.pulldown-container form {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pulldown-container select,
+.pulldown-container button,
+.pulldown-container label {
+    margin: 0 5px;
+    padding: 5px;
+    font-size: 1rem;
+}
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: auto; /* 自動幅調整 */
+}
+
+table th,
+table td {
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    width: 10em;
+}
+
+table th {
+    background-color: #f2f2f2;
+}
+
+
+button {
+    margin-top: 2em;
+    width: 4.5em;
+    height: 2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+}
+
+button:hover {
+    background-color: #ccc;
+}
