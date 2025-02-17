@@ -1,0 +1,82 @@
+/* 全体の基本フォントや余白の設定 */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* プルダウンフォームと更新ボタンを横並びに配置 */
+.form-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;       /* 各要素間の余白 */
+    margin: 20px auto;
+}
+
+/* プルダウンメニューのフォームを中央に配置 */
+.form-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+/* テーブルを中央に配置するためのコンテナ */
+.timetable-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+/* シンプルなテーブルデザイン */
+.timetable {
+    border-collapse: collapse;
+    width: 90%; /* 必要に応じて調整 */
+}
+
+/* テーブルヘッダーのスタイル（曜日部分） */
+.timetable th {
+    background-color: #f5f5f5;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+/* テーブルセルの基本スタイル */
+.timetable td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+/* 日付セル内のテキストの中央寄せ */
+.date-cell div {
+    text-align: center;
+}
+
+/* コマ番号セルのスタイル */
+.period {
+    font-weight: bold;
+    text-align: center;
+}
+
+/* セレクトボックスのスタイル */
+select {
+    height: 2em;
+    width: 8em;
+    text-align: center;
+}
+
+/* ボタンのスタイル */
+button {
+    width: 7em;
+    height: 2em;
+    cursor: pointer;
+    border: 0.5px solid #ccc;
+    margin-left: 1em;
+}
+
+/* ボタンにマウスオーバーした際の背景色変更 */
+button:hover {
+    background-color: #ccc;
+}
