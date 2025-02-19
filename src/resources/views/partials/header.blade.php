@@ -1,6 +1,8 @@
 <header>
     <div class="header-logo">
-        <h1>{{ $headerTitle  }}</h1>
+        <a href="{{ route('timetables.index') }}" style="text-decoration: none; color: black;">
+            <h1>{{ $headerTitle  }}</h1>
+        </a>
     </div>
 
     <div id="js-toggle-sidebar">&equiv;</div>

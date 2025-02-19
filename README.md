@@ -21,3 +21,10 @@ docker compose up -d
 
 【コンテナ停止及び削除】  
 docker compose down  
+
+
+【seederを用いた初期データ作成】
+php artisan db:seed --class=seederのファイル名
+
+【model内を表示してデータを確認】
+App\Models\モデル名::all();
