@@ -23,8 +23,8 @@ docker compose up -d
 docker compose down  
 
 
-【seederを用いた初期データ作成】
+【seederを用いた初期データ作成】  
 php artisan db:seed --class=seederのファイル名
 
-【model内を表示してデータを確認】
+【model内を表示してデータを確認】  
 App\Models\モデル名::all();
