@@ -47,7 +47,7 @@
                 @endforeach
             </select>
 
-            <button type="submit">表示</button>
+            {{-- <button type="submit">表示</button> --}}
         </form>
         <button type="submit" form="storeForm">
             時間割登録

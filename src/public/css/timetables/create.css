@@ -16,18 +16,16 @@
 .timetable {
     border-collapse: collapse;
     width: 90%; /* 必要に応じて調整 */
+    table-layout: fixed; /* テーブルの幅を固定 */
 }
 
 /* テーブルヘッダーのスタイル（曜日部分） */
 .timetable th {
     background-color: #f5f5f5;
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;  /* ヘッダーは中央寄せ */
 }
 
-/* 全てのtdタグのテキストを中央寄せ */
-.timetable td {
+
+.timetable th, .timetable td {
     padding: 10px;
     border: 1px solid #ddd;
     text-align: center;

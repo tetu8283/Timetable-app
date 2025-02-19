@@ -55,7 +55,7 @@
                                         </td>
                                     @endif
                                 @else
-                                    <td>(空)</td>
+                                    <td></td>
                                 @endif
                             @else
                                 <td></td>
