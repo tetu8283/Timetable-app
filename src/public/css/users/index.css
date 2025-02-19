@@ -26,9 +26,26 @@
     border: 1px solid #ddd;
 }
 
+.centered-table th, .centered-table td {
+    text-align: center;
+}
+
 /* flashメッセージのスタイル */
 .flash-msg {
     text-align: center;
     color: green;
     margin-bottom: 20px;
+}
+
+button {
+    width: 6em;
+    height: 3em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+}
+
+button:hover {
+    background-color: #ccc;
 }

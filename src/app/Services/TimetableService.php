@@ -45,6 +45,47 @@ class TimetableService
     }
 
     /**
+     * 指定年月の四半期カレンダー（週ごと、月曜～金曜）を生成
+     *
+     * @param int $year
+     * @param int $month
+     * @return array ['calendar' => [...], 'firstDay' => Carbon, 'lastDay' => Carbon]
+     */
+    public function getQuarterCalendar($year, $month)
+    {
+        // 四半期の開始月を算出（例：4,5,6 → 4月スタート）
+        $quarterStartMonth = floor(($month - 1) / 3) * 3 + 1;
+        $quarterStart = Carbon::create($year, $quarterStartMonth, 1);
+        // 四半期の終了日は、開始月＋2月の最終日
+        $quarterEnd = Carbon::create($year, $quarterStartMonth + 2, 1)->endOfMonth();
+
+        // カレンダーの開始日は四半期開始日の週の月曜に設定
+        $startDate = $quarterStart->copy()->startOfWeek(Carbon::MONDAY);
+
+        $calendar = [];
+        $current = $startDate->copy();
+        // 四半期終了日を含む週までループ
+        while ($current->lte($quarterEnd)) {
+            $week = [];
+            for ($i = 0; $i < 5; $i++) {
+                $day = $current->copy()->addDays($i);
+                // 四半期内の日付ならそのまま、四半期外なら null をセット
+                $week[] = ($day->between($quarterStart, $quarterEnd, true)) ? $day : null;
+            }
+            if (array_filter($week)) {
+                $calendar[] = $week;
+            }
+            $current->addWeek();
+        }
+
+        return [
+            'calendar' => $calendar,
+            'firstDay' => $quarterStart,
+            'lastDay'  => $quarterEnd
+        ];
+    }
+
+    /**
      * 指定条件のTimetableレコードを取得し、連想配列に変換
      *
      * @param int        $grade
@@ -85,7 +126,6 @@ class TimetableService
     {
         $insertData = [];
 
-        // ここで3月を選択しても2月に変わってしまう
         foreach ($subjects as $date => $periodArray) {
 
             // ユーザーが選択した年・月に上書きし、日付部分のみをそのまま利用する
@@ -123,7 +163,6 @@ class TimetableService
      */
     public function updateTimetables($grade, $course, array $subjects)
     {
-        // 空の場合の科目レコード（存在しなければ作成）
         $emptySubject = Subject::updateOrCreate(
             ['subject_id' => '002'],
             [
@@ -133,22 +172,29 @@ class TimetableService
                 'location'     => ' '
             ]
         );
+
         $emptySubjectId = $emptySubject->id;
 
         foreach ($subjects as $date => $periodArray) {
+
+            // 1コマから4コマまでループ
             foreach ($periodArray as $period => $subjectId) {
+
                 if (empty($subjectId)) {
                     $subjectId = $emptySubjectId;
                 }
 
+                // 更新または新規作成
                 Timetable::updateOrCreate(
                     [
+                        // 更新したい同じ学年等を検索する条件
                         'grade'         => $grade,
                         'course_id'     => $course,
                         'date'          => $date,
                         'class_period'  => $period,
                     ],
                     [
+                        // 更新または新規作成する値
                         'subject_id'    => $subjectId,
                         'course_id'     => $course,
                         'updated_at'    => now(),
@@ -156,5 +202,36 @@ class TimetableService
                 );
             }
         }
+    }
+
+    /**
+     * 前月の year, month を返す
+     */
+    public function getPrevMonthYear($year, $month)
+    {
+        // 月をデクリメント
+        $month--;
+        // もし1月より小さくなったら、前年の12月に
+        if ($month < 1) {
+            $month = 12;
+            $year--;
+        }
+        // 配列で返す
+        return [$year, $month];
+    }
+
+    /**
+     * 翌月の year, month を返す
+     */
+    public function getNextMonthYear($year, $month)
+    {
+        // 月をインクリメント
+        $month++;
+        // もし12月より大きくなったら、翌年の1月に
+        if ($month > 12) {
+            $month = 1;
+            $year++;
+        }
+        return [$year, $month];
     }
 }

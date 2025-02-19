@@ -13,7 +13,7 @@
     <div class="show-container">
         <div class="pulldown-container">
             <!-- プルダウンフォーム（年・月・コース・学年・表示形式） -->
-            <form action="{{ route('timetables.index') }}" method="GET" style="display:inline-block; margin-right:10px;" id="timetable-form">
+            <form action="{{ route('staff.show', Auth::user()->id) }}" method="GET" style="display:inline-block; margin-right:10px;" id="timetable-form">
                 <label for="year">年:</label>
                 <select name="year" id="year">
                     @foreach($years as $y)

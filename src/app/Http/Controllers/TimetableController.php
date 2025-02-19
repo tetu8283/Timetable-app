@@ -23,11 +23,6 @@ class TimetableController extends Controller
         $this->timetableService = $timetableService;
     }
 
-    /**
-     * Summary of index
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function index(Request $request)
     {
         $now            = Carbon::now();
@@ -35,7 +30,10 @@ class TimetableController extends Controller
         $selectedMonth  = $request->input('month', $now->month);
         $selectedGrade  = $request->input('grade', 1);
         $selectedCourse = $request->input('course', 1);
-        $viewMode       = $request->input('view', 'month'); // 表示モード：'week' or 'month'
+        $viewMode       = $request->input('view', 'month'); // 表示モード：'week', 'month' または 'quarter'
+
+        // 新たに週オフセットのパラメータを取得（初期値は 0：現在の週）
+        $weekOffset = (int) $request->input('week_offset', 0);
 
         // プルダウン用の値
         $minYear = $now->year - 2;
@@ -46,25 +44,33 @@ class TimetableController extends Controller
         $weekDays = ['月','火','水','木','金'];
         $periods  = 4; // 1日あたりのコマ数
 
-        // カレンダー作成（表示モードによって週別表示か月別表示かを切り替え）
         if ($viewMode === 'week') {
             // 週別表示の場合
-            // 修正: 現在の月の場合は現在の日付を基準に、それ以外の場合は選択月の中間日（15日）を基準にする
+            // 基準となる日付を決定
             if ($selectedYear == $now->year && $selectedMonth == $now->month) {
-                $selectedDate = $now;
+                $selectedDate = $now->copy();
             } else {
                 $selectedDate = Carbon::create($selectedYear, $selectedMonth, 15);
             }
+            // 週オフセットを加える（前週なら -1、翌週なら +1 など）
+            $selectedDate->addWeeks($weekOffset);
+
             $startOfWeek = $selectedDate->copy()->startOfWeek(Carbon::MONDAY);
             $week = [];
             for ($i = 0; $i < 5; $i++) {
                 $week[] = $startOfWeek->copy()->addDays($i);
             }
-            $calendar = [$week]; // 週別表示なので1週間のみの配列にする
+            $calendar = [$week];
             $firstDay = $week[0];
             $lastDay  = $week[4];
+        } elseif ($viewMode === 'quarter') {
+            // 四半期表示の場合
+            $calendarData = $this->timetableService->getQuarterCalendar($selectedYear, $selectedMonth);
+            $calendar     = $calendarData['calendar'];
+            $firstDay     = $calendarData['firstDay'];
+            $lastDay      = $calendarData['lastDay'];
         } else {
-            // 月別表示
+            // 月別表示の場合
             $calendarData = $this->timetableService->getCalendar($selectedYear, $selectedMonth);
             $calendar     = $calendarData['calendar'];
             $firstDay     = $calendarData['firstDay'];
@@ -73,17 +79,22 @@ class TimetableController extends Controller
 
         // 指定期間のTimetableを一括取得＆連想配列化
         $timetableData = $this->timetableService->getTimetableMap($selectedGrade, $selectedCourse, $firstDay, $lastDay);
-        extract($timetableData); // $timetableRecords, $timetableMap, $firstTimetableId などが利用可能
+        extract($timetableData);
 
-        $headerTitle = '時間割一覧'; // ヘッダータイトル（時間割一覧ページ）
+        $headerTitle = '時間割一覧';
+
+        // 週表示の場合、前週・翌週用のオフセット値も渡す
+        $prevWeekOffset = $weekOffset - 1;
+        $nextWeekOffset = $weekOffset + 1;
 
         return view('timetables.TimetableIndex', compact(
             'headerTitle', 'years', 'months', 'grades',
             'selectedYear', 'selectedMonth', 'selectedGrade', 'selectedCourse',
             'weekDays', 'calendar', 'periods', 'timetableMap', 'timetableRecords',
-            'firstTimetableId', 'viewMode'
+            'firstTimetableId', 'viewMode', 'weekOffset', 'prevWeekOffset', 'nextWeekOffset'
         ));
     }
+
 
 
     /**
@@ -212,20 +223,24 @@ class TimetableController extends Controller
         ));
     }
 
+    /**
+     * 時間割更新処理
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function update(Request $request)
     {
         $grade  = $request->input('grade');
         $course = $request->input('course');
-        // subjects[YYYY-MM-DD][コマ] => 科目ID の配列
-        $subjects = $request->input('subjects', []);
-
-        // 追加：選択された年と月を取得（隠しフィールドから送信されている）
         $selectedYear  = $request->input('year');
         $selectedMonth = $request->input('month');
 
+        // フォームで選択した科目を配列で取得
+        $subjects = $request->input('subjects', []);
+
         $this->timetableService->updateTimetables($grade, $course, $subjects);
 
-        // 修正：リダイレクト時に選択された年月・学年・コースをクエリパラメータとして渡す
         return redirect()->route('timetables.index', [
             'year'   => $selectedYear,
             'month'  => $selectedMonth,

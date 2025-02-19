@@ -68,6 +68,7 @@ header {
 /* ここまで */
 
 .logout-button {
+    width: 7em;
     color: #ffffff;
     background-color: red;
     border-radius: 4px;

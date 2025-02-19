@@ -70,9 +70,6 @@ Route::group([
     // （リソースルートの edit($id) ではなく、月単位の一括更新を想定）
     Route::get('timetables/edit',   [TimetableController::class, 'edit'])->name('timetables.edit');
     Route::post('timetables/update',[TimetableController::class, 'update'])->name('timetables.update');
-
-    // 必要があれば、destroy 以外に delete 用の独自メソッドがある場合ここで定義
-    // Route::delete('timetables/something', [TimetableController::class, 'delete'])->name('timetables.delete');
 });
 
 /*

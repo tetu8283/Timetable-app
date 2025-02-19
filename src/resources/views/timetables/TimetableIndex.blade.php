@@ -53,11 +53,25 @@
                 <select name="view" id="viewMode">
                     <option value="month" {{ $viewMode == 'month' ? 'selected' : '' }}>月別表示</option>
                     <option value="week" {{ $viewMode == 'week' ? 'selected' : '' }}>週別表示</option>
+                    <option value="quarter" {{ $viewMode == 'quarter' ? 'selected' : '' }}>3ヶ月表示</option>
                 </select>
 
                 <button type="submit">表示</button>
             </form>
         </div>
+
+        @if($viewMode === 'week')
+            <div class="week-nav" style="text-align: center;">
+                <a href="{{ route('timetables.index', array_merge(request()->all(), ['week_offset' => $prevWeekOffset])) }}"
+                    style="text-decoration: none">
+                    先週
+                </a>
+                <a href="{{ route('timetables.index', array_merge(request()->all(), ['week_offset' => $nextWeekOffset])) }}"
+                    style="text-decoration: none">
+                    翌週
+                </a>
+            </div>
+        @endif
 
         <!-- タイムテーブル表示部分（部分ビューをインクルード） -->
         <div id="timetable-content">

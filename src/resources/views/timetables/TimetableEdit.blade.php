@@ -57,6 +57,7 @@
 
         <form id="updateForm" action="{{ route('staff.timetables.update') }}" method="POST">
             @csrf
+
             <!-- 選択された年月日・学年・コースを送信 -->
             <input type="hidden" name="year"   value="{{ $selectedYear }}">
             <input type="hidden" name="month"  value="{{ $selectedMonth }}">

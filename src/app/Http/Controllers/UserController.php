@@ -29,7 +29,7 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $user = User::findOrFail($user->id);
-        $headerTitle = 'プロフィール更新';
+        $headerTitle = 'プロフィール編集';
 
         return view('users.UserEdit', compact('user', 'headerTitle'));
     }

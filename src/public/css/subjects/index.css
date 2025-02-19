@@ -1,0 +1,97 @@
+.subject-container {
+    text-align: center;
+}
+
+/* プルダウンフォーム部分 */
+.pulldown-container form {
+    display: inline-block;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pulldown-container label,
+.pulldown-container input,
+.pulldown-container button {
+    padding: 5px;
+    font-size: 1rem;
+}
+
+.pulldown-container button {
+    width: 5em;
+    margin-left: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+}
+
+.pulldown-container button:hover {
+    background-color: #ccc;
+}
+
+.pulldown-container input {
+    width: 8em;
+}
+
+.pulldown-container .color {
+    width: 4em;
+}
+
+/* バリデーションエラーのスタイル */
+.alert {
+    margin: 20px auto;
+    padding: 10px;
+    border: 1px solid red;
+    background-color: #ffe6e6;
+    width: 80%;
+    text-align: left;
+}
+
+/* 科目一覧テーブル */
+.index-subject table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: auto; /* テーブルの幅は内容に合わせる */
+}
+
+/* テーブルのセルの中央寄せ＆ボーダー */
+.index-subject th,
+.index-subject td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    width: 10em;
+    height: 1em;
+}
+
+/* テーブルヘッダーの背景色 */
+.index-subject th {
+    background-color: #f2f2f2;
+}
+
+.week-navigation {
+    text-align: center;
+    /* justify-content: space-between; */
+}
+
+.color {
+    cursor: pointer;
+}
+
+button {
+    width: 6em;
+    height: 3em;
+    cursor: pointer;
+    border: none;
+    border-radius: 3px;
+    border: 0.5px solid #ccc;
+}
+
+button:hover {
+    background-color: #ccc;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
