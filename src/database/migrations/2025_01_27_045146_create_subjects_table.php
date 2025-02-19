@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('subject_name');
             $table->string('school_id');
             $table->string('color')->default('#ffffff');
-            $table->string('location')->nullable();
+            $table->string(column: 'location')->nullable();
 
             $table->foreign('school_id')->references('school_id')->on('users')->onDelete('cascade');
             $table->timestamps();

@@ -23,32 +23,40 @@ class SubjectController extends Controller
     }
 
     /**
-     * Summary of store
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * Summary of create
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function store(Request $request)
     {
-        // バリデーションを追加
-        $request->validate([
-            'subject_id' => 'required|unique:subjects,subject_id',
-            'subject_name' => 'required|string|max:255',
-            'school_id' => 'required|string',
-            'location' => 'string|max:255',
-            'color' => 'required|string',
+        $validatedData = $request->validate([
+            'subject_id'    => 'required|unique:subjects,subject_id',
+            'subject_name'  => 'required|string|max:255',
+            'school_id'     => [
+                'required',
+                'string',
+                // usersテーブルのschool_idに該当レコードがあるか
+                'exists:users,school_id',
+            ],
+            'location'      => 'nullable|string|max:255',
+            'color'         => 'required|string',
+        ], [
+
+            'school_id.exists' => '学籍番号に該当するユーザが見つかりません。'
         ]);
 
+        // バリデーション成功の場合のみここから下が実行される
         $subject = new Subject();
-        $subject->subject_id = $request->subject_id;
-        $subject->subject_name = $request->subject_name;
-        $subject->school_id = $request->school_id;
-        $subject->location = $request->location;
-        $subject->color = $request->color;
+        $subject->subject_id    = $validatedData['subject_id'];
+        $subject->subject_name  = $validatedData['subject_name'];
+        $subject->school_id     = $validatedData['school_id'];
+        $subject->location      = $request->input('location');
+        $subject->color         = $validatedData['color'];
 
         $subject->save();
 
         return redirect()->route('staff.subjects.index')->with('success', '科目が作成されました。');
     }
+
 
     /**
      * Summary of edit

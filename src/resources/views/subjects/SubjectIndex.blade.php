@@ -16,7 +16,7 @@
                 <input type="text" id="subject_id" name="subject_id" required>
                 <label for="subject_name">科目名:</label>
                 <input type="text" id="subject_name" name="subject_name" required>
-                <label for="school_id">担当者番号:</label>
+                <label for="school_id">学籍番号:</label>
                 <input type="text" id="school_id" name="school_id" required>
                 <label for="location">場所:</label>
                 <input type="text" id="location" name="location">
